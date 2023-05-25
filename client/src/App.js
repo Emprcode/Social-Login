@@ -1,23 +1,46 @@
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
+ const  App = () =>  {
+  const google = () => {
+    window.open("http://localhost:5000/auth/google", "_self");
+  };
+
+  const github = () => {
+    window.open("http://localhost:5000/auth/github", "_self");
+  };
+
+  const facebook = () => {
+    window.open("http://localhost:5000/auth/facebook", "_self");
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     <div className="login">
+      <h1 className="loginTitle">Choose a Login Method</h1>
+   
+        <div className="left">
+          <div className="loginButton google" onClick={google}>
+            <img src='' alt="" className="icon" />
+            Google
+          </div>
+          <div className="loginButton facebook" onClick={facebook}>
+            <img src='' alt="" className="icon" />
+            Facebook
+          </div>
+          <div className="loginButton github" onClick={github}>
+            <img src='' alt="" className="icon" />
+            Github
+          </div>
+        </div>
+        <div className="center">
+          <div className="line" />
+         
+        </div>
+        
+      </div>
+
+
+
     </div>
   );
 }
