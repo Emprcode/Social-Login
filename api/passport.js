@@ -17,18 +17,42 @@ const GOOGLE_CLIENT_SECRET = "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";
 // FACEBOOK_APP_ID = "your id";
 // FACEBOOK_APP_SECRET = "your id";
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
-    },
-    function (accessToken, refreshToken, profile, done) {
-      done(null, profile);
+// passport.use(
+//   new GoogleStrategy(
+//     {
+//       clientID: GOOGLE_CLIENT_ID,
+//       clientSecret: GOOGLE_CLIENT_SECRET,
+//       callbackURL: "/auth/google/callback",
+//     },
+//     function (accessToken, refreshToken, profile, done) {
+//       done(null, profile);
+//     }
+//   )
+// );
+
+passport.use(new GoogleStrategy({
+    clientID: 'GOOGLE_CLIENT_ID',
+    clientSecret: 'GOOGLE_CLIENT_SECRET',
+    callbackURL: 'http://localhost:5000/auth/google/callback',
+  }, async (accessToken, refreshToken, profile, done) => {
+    try {
+      const existingUser = await User.findOne({ googleId: profile.id });
+      if (existingUser) {
+        return done(null, existingUser);
+      }
+  
+      const newUser = new User({
+        googleId: profile.id,
+        displayName: profile.displayName,
+      });
+      await newUser.save();
+      return done(null, newUser);
+    } catch (error) {
+      console.error('Error during Google OAuth:', error);
+      return done(error, null);
     }
-  )
-);
+  }));
+  
 
 // passport.use(
 //   new GithubStrategy(
