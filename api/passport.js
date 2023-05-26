@@ -8,14 +8,14 @@ import { Strategy as GitHubStrategy } from 'passport-github2';
 import passport from 'passport';
 
 const GOOGLE_CLIENT_ID =
-  "your id";
-const GOOGLE_CLIENT_SECRET = "your id";
+  "671128114044-7o7s681ijl2cqksbq7c3nqbec3npdbhp.apps.googleusercontent.com";  
+const GOOGLE_CLIENT_SECRET = "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";
 
-GITHUB_CLIENT_ID = "your id";
-GITHUB_CLIENT_SECRET = "your id";
+// GITHUB_CLIENT_ID = "your id";
+// GITHUB_CLIENT_SECRET = "your id";
 
-FACEBOOK_APP_ID = "your id";
-FACEBOOK_APP_SECRET = "your id";
+// FACEBOOK_APP_ID = "your id";
+// FACEBOOK_APP_SECRET = "your id";
 
 passport.use(
   new GoogleStrategy(
@@ -30,18 +30,18 @@ passport.use(
   )
 );
 
-passport.use(
-  new GithubStrategy(
-    {
-      clientID: GITHUB_CLIENT_ID,
-      clientSecret: GITHUB_CLIENT_SECRET,
-      callbackURL: "/auth/github/callback",
-    },
-    function (accessToken, refreshToken, profile, done) {
-      done(null, profile);
-    }
-  )
-);
+// passport.use(
+//   new GithubStrategy(
+//     {
+//       clientID: GITHUB_CLIENT_ID,
+//       clientSecret: GITHUB_CLIENT_SECRET,
+//       callbackURL: "/auth/github/callback",
+//     },
+//     function (accessToken, refreshToken, profile, done) {
+//       done(null, profile);
+//     }
+//   )
+// );
 
 // passport.use(
 //   new FacebookStrategy(
@@ -63,3 +63,6 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
+
+
+export default passport;

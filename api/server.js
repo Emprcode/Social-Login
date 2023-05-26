@@ -1,8 +1,8 @@
 // const cookieSession = require("cookie-session");
 import express from 'express';
 import cors from "cors";
-// const passportSetup = require("./passport");
-// const authRoute = require("./routes/auth");
+import passportSetup from "./passport.js";
+import authRoute from"./src/router/AuthRouter.js";
 
 import passport from 'passport';
 
