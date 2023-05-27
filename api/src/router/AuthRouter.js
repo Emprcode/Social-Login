@@ -1,86 +1,89 @@
-import express from 'express'
-import passport from 'passport'
-const router = express.Router()
-
-import mongoose from 'mongoose'
+import express from 'express';
+import passport from 'passport';
+import jwt from 'jsonwebtoken';
 
 
+const router = express.Router();
 
-const CLIENT_URL = "http://localhost:3000/dashboard";
+const CLIENT_URL = "http://localhost:3000";
 
+// JWT configuration
+// const jwtSecret = 'cbjkDSflagfuiaf546478789412549879';
 
-// Connect to MongoDB
-await mongoose.connect('mongodb://localhost/test-social', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-console.log('Connected to MongoDB');
+// // JWT authentication middleware
+// const authenticateJWT = (req, res, next) => {
+//   const token = req.headers.authorization?.split(' ')[1];
 
-// Create a user model (Mongoose schema)
-const User = mongoose.model('User', {
-  googleId: String,
-//   linkedinId: String,
-//   githubId: String,
-//   displayName: String,
-});
-
-// Configure Passport with Google OAuth strategy
-// passport.use(new GoogleStrategy({
-//   clientID: 'YOUR_GOOGLE_CLIENT_ID',
-//   clientSecret: 'YOUR_GOOGLE_CLIENT_SECRET',
-//   callbackURL: 'http://localhost:5000/auth/google/callback',
-// }, async (accessToken, refreshToken, profile, done) => {
-//   try {
-//     const existingUser = await User.findOne({ googleId: profile.id });
-//     if (existingUser) {
-//       return done(null, existingUser);
-//     }
-
-//     const newUser = new User({
-//       googleId: profile.id,
-//       displayName: profile.displayName,
+//   if (token) {
+//     jwt.verify(token, jwtSecret, (err, user) => {
+//       if (err) {
+//         return res.sendStatus(403); // Invalid token
+//       }
+//       req.user = user;
+//       next();
 //     });
-//     await newUser.save();
-//     return done(null, newUser);
-//   } catch (error) {
-//     console.error('Error during Google OAuth:', error);
-//     return done(error, null);
+//   } else {
+//     res.sendStatus(401); // Missing token
 //   }
-// }));
+// };
 
 
-// router.get("/login/success", (req, res) => {
-//   if (req.user) {
-//     res.status(200).json({
-//       success: true,
-//       message: "successfull",
-//       user: req.user,
-//       //   cookies: req.cookies
-//     });
-//   }
+// app.use(passport.initialize());
+
+// Protected route example
+// router.get('/protected', (req, res) => {
+//   // Access the authenticated user through req.user
+//   const user = req.user;
+//   res.json({ message: 'Protected route', user });
 // });
 
-// router.get("/login/failed", (req, res) => {
-//   res.status(401).json({
-//     status: "error",
-//     message: "failure",
-//   });
-// });
 
-// router.get("/logout", (req, res) => {
-//   req.logout();
-//   res.redirect(CLIENT_URL);
-// });
 
-router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
+
+router.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { session: false }),
+  (req, res) => {
+    // Redirect or respond with the JWT token
+    res.redirect(`/auth/google/success?token=${req.user.token}`);
+  }
+  );
+  router.get("/login/success", (req, res) => {
+    console.log(req.user)
+  if (req.user) {
+    // console.log(req.user.email)
+    res.status(200).json({
+      success: true,
+      message: "successfull",
+      user: req.user,
+      //   cookies: req.cookies
+    });
+  }
+});
+
+
+router.get("/login/failed", (req, res) => {
+  res.status(401).json({
+    success: false,
+    message: "failure",
+  });
+});
+
+router.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect(CLIENT_URL);
+});
+
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: CLIENT_URL,
+    successRedirect: CLIENT_URL + '/dashboard',
     failureRedirect: "/login/failed",
   })
-);
+  );
+  
 
 // router.get("/github", passport.authenticate("github", { scope: ["profile"] }));
 
@@ -101,5 +104,6 @@ router.get(
 //     failureRedirect: "/login/failed",
 //   })
 // );
+
 
 export default router;
