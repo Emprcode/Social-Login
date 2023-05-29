@@ -1,88 +1,41 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import jwt from 'jsonwebtoken'
 import { Strategy as GithubStrategy } from 'passport-github2';
 import { Strategy as LinkedinStrategy } from 'passport-linkedin-oauth2';
 import UserSchema from './src/user/UserSchema.js';
-// const GoogleStrategy = require("passport-google-oauth20").Strategy;
-// const GithubStrategy = require("passport-github2").Strategy;
-// const FacebookStrategy = require("passport-facebook").Strategy;
-// const passport = require("passport");
 
-const GOOGLE_ID = process.env.GOOGLE_CLIENT_ID
 
-const GOOGLE_SECRET = process.env.GOOGLE_CLIENT_SECRET
+const GOOGLE_ID = "671128114044-7o7s681ijl2cqksbq7c3nqbec3npdbhp.apps.googleusercontent.com"
+
+const GOOGLE_SECRET = "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"
+const jwtSecret = "7ce53b6bab2f7511a1dc6b365b3da008d60094dd019e6575eb2a459125e38976"
+
 
 // GITHUB_CLIENT_ID = "your id";
 // GITHUB_CLIENT_SECRET = "your id";
 
 // FACEBOOK_APP_ID = "your id";
 // FACEBOOK_APP_SECRET = "your id";
-
 passport.use(
   new GoogleStrategy(
     {
       clientID: GOOGLE_ID,
       clientSecret: GOOGLE_SECRET,
-      callbackURL: "/auth/google/callback",
+      callbackURL: 'http://localhost:5000/auth/google/callback',
     },
-    async function  (accessToken, refreshToken, profile, done) {
-      const email = profile.emails[0].value;
-  const name = profile.displayName;
-  // const { id, displayName, email } = profile;
-  // if (!profile[id]) {
-  //   profile[id] = { id, displayName, email };
-  // }
+    (accessToken, refreshToken, profile, done) => {
+      // Handle authentication and user registration
+      // ...
 
-  // Generate a JWT token
-  // const token = jwt.sign({ userId: id }, jwtSecret, { expiresIn: '1h' });
+      // Generate a JWT token
+      const token = jwt.sign({ userId: profile.id }, jwtSecret, { expiresIn: '1h' });
 
-  // Return the token to the client
-  // return done(null, { token });
-  // Create a new user document
-  const newUser = new UserSchema({
-    email: email,
-    name: name
-    // Set other user fields as needed
-  });
-
-  // Save the new user document to the database
-  await newUser.save( )
-   
-    return done(null, newUser, 
-      // {token}
-      );
-  
-      // done(null, profile);
+      // Return the token to the frontend
+      return done(null, { token });
     }
   )
 );
-
-// passport.use(
-//   new GithubStrategy(
-//     {
-//       clientID: GITHUB_CLIENT_ID,
-//       clientSecret: GITHUB_CLIENT_SECRET,
-//       callbackURL: "/auth/github/callback",
-//     },
-//     function (accessToken, refreshToken, profile, done) {
-//       done(null, profile);
-//     }
-//   )
-// );
-
-// passport.use(
-//   new FacebookStrategy(
-//     {
-//       clientID: FACEBOOK_APP_ID,
-//       clientSecret: FACEBOOK_APP_SECRET,
-//       callbackURL: "/auth/facebook/callback",
-//     },
-//     function (accessToken, refreshToken, profile, done) {
-//       done(null, profile);
-//     }
-//   )
-// );
-
 passport.serializeUser((user, done) => {
   done(null, user);
 });
