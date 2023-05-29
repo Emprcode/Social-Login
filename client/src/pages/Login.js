@@ -1,5 +1,5 @@
 import React from 'react'
-
+import {Button, Col, Container, Row} from 'react-bootstrap'
 const Login = () => {
     const google = () => {
         window.open("http://localhost:5000/auth/google", "_self");
@@ -9,21 +9,31 @@ const Login = () => {
         window.open("http://localhost:5000/auth/github", "_self");
       };
     
-      const facebook = () => {
-        window.open("http://localhost:5000/auth/facebook", "_self");
+      const linkedin = () => {
+        window.open("http://localhost:5000/auth/linkedin", "_self");
       };
   return (
 
     
     
-    <div className="container">
-    <h1>Login Page</h1>
-    <div className="button-container">
-      <Button className="btn-3d btn-primary">Button 1</Button>
-      <Button className="btn-3d btn-success">Button 2</Button>
-      <Button className="btn-3d btn-danger">Button 3</Button>
-    </div>
-  </div>
+    <Container className="d-flex flex-column align-items-center shadow-container mt-4">
+      <h1>3D Button Page</h1>
+      <Row className="mt-4">
+        <Col>
+          <Button className="btn-3d btn-primary" onClick={google}>Google</Button>
+        </Col>
+      </Row>
+      <Row className="mt-4">
+        <Col>
+          <Button className="btn-3d btn-success" onClick={linkedin}>LinkedIn</Button>
+        </Col>
+      </Row>
+      <Row className="mt-4">
+        <Col>
+          <Button className="btn-3d btn-danger" onClick={github}>Github</Button>
+        </Col>
+      </Row>
+    </Container>
 
     // <div className="App">
     //  <div className="login">

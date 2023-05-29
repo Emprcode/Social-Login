@@ -1,23 +1,8 @@
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import jwt from 'jsonwebtoken';
+import Jwt from 'jsonwebtoken'
 
-
-const jwtSecret = 'your_jwt_secret_key';
-
-const jwtOptions = {
-  secretOrKey: jwtSecret,
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-};
-
-const jwtStrategy = new JwtStrategy(jwtOptions, (payload, done) => {
-    // Here, you can find and authenticate the user based on the payload
-    const user = findUserByPayload(payload);
-    if (user) {
-      return done(null, user);
-    } else {
-      return done(null, false);
-    }
-  });
-  
-  passport.use(jwtStrategy);
-  
+export const signAccessJwt = (payload) => {
+  return Jwt.sign(payload, process.env.ACCESS_JWT, {expiresIn: "60min"})
+}
+export const signRefreshJwt = (payload) => {
+  return Jwt.sign(payload, process.env.REFRESH_JWT, {expiresIn:"30d"})
+}

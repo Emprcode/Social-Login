@@ -23,6 +23,10 @@
   transition: all 0.3s ease;
   perspective: 1000px;
   overflow: hidden;
+  margin: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Shadow effect for the buttons */
+  transform: translate(0, 0);
+  transition: transform 0.3s ease-in-out;
 }
 
 .btn-3d::before,
@@ -51,6 +55,7 @@
 
 .btn-3d:hover {
   transform: translateZ(10px);
+  transform: translate(0, -5px);
 }
 
 .btn-3d:hover::before {
@@ -61,4 +66,12 @@
 .btn-3d:hover::after {
   opacity: 1;
   transform: rotateX(0deg) translateZ(-10px);
+}
+
+
+.shadow-container {
+  background-color: #f8f9fa; /* Background color for the container */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Shadow effect for the container */
+  padding: 20px;
+  border-radius: 10px;
 }
