@@ -1,8 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Button, Col, Container, Row} from 'react-bootstrap'
+import { fetchToken } from './src/axios'
 const Login = () => {
+
+  
+  useEffect(()=> {
+    fetchToken()
+  }, [])
     const google = () => {
         window.open("http://localhost:5000/auth/google", "_self");
+        
       };
     
       const github = () => {

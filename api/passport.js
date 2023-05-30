@@ -3,7 +3,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GithubStrategy } from 'passport-github2';
 import { Strategy as LinkedinStrategy } from 'passport-linkedin-oauth2';
 import UserSchema from './src/user/UserSchema.js';
-import { signAccessJwt, signRefreshJwt } from './src/jwt.js';
+
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -22,13 +22,10 @@ passport.use(
       callbackURL: 'http://localhost:5000/auth/google/callback',
     },
     (accessToken, refreshToken, profile, done) => {
-      const tokens = {
-        accessJwt : signAccessJwt({email: profile.email}),
-        refreshJwt : signRefreshJwt({email: profile.email})
-      }
+     
 
       // Return the token to the frontend
-      return done(null, {profile, tokens} );
+      return done(null, profile );
     }
   )
 );

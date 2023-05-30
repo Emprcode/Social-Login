@@ -12,14 +12,22 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', { session: false ,  }),
+  passport.authenticate('google', { session: false  }),
   (req, res) => {
     console.log(req.user)
+    const user = req.user;
+    const tokens = {
+      accessJwt : signAccessJwt({email: user.email}),
+      refreshJwt : signRefreshJwt({email: user.email})
+    }
     // Redirect or respond with the JWT token
+    // res.cookie('token', tokens, { httpOnly: true });
+    // tokens && user  && res.redirect(CLIENT_URL + '/dashboard')
     res.json({ 
       status:"success",
-      token:req.user });
-  }
+      user,
+      tokens });
+  },
 
 );
 
