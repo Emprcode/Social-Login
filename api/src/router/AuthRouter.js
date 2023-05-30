@@ -12,7 +12,7 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', { session: false }),
+  passport.authenticate('google', { session: false ,  }),
   (req, res) => {
     console.log(req.user)
     // Redirect or respond with the JWT token
@@ -20,6 +20,7 @@ router.get(
       status:"success",
       token:req.user });
   }
+
 );
 
 router.get(
@@ -29,51 +30,51 @@ router.get(
     failureRedirect: "/login/failed",
   })
 );
-// router.get("/login/success", (req, res) => {
-//  console.log(req.user)
-//   if (req.user) {
-//     res.status(200).json({
-//       success: true,
-//       message: "successfull",
-//       user: req.user,
-//     });
-//   }
-// });
+router.get('/login/success', (req, res) => {
+ console.log(req.user)
+  if (req.user) {
+    res.status(200).json({
+      success: true,
+      message: "successfull",
+      user: req.user,
+    });
+  }
+});
 
-// router.get("/login/failed", (req, res) => {
-//   res.status(401).json({
-//     success: false,
-//     message: "failure",
-//   });
-// });
+router.get("/login/failed", (req, res) => {
+  res.status(401).json({
+    success: false,
+    message: "failure",
+  });
+});
 
 // router.get("/logout", (req, res) => {
 //   req.logout();
 //   res.redirect(CLIENT_URL);
 // });
-const authenticateJWT = (req, res, next) => {
-  const token = req.headers.authorization;
-console.log(token)
-  if (token) {
-    jwt.verify(token, process.env.SECRET, (err, decoded) => {
-      if (err) {
-        // Handle invalid token
-        return res.sendStatus(403);
-      }
+// const authenticateJWT = (req, res, next) => {
+//   const token = req.headers.authorization;
+// console.log(token)
+//   if (token) {
+//     jwt.verify(token, process.env.SECRET, (err, decoded) => {
+//       if (err) {
+//         // Handle invalid token
+//         return res.sendStatus(403);
+//       }
 
-      req.user = decoded;
-      next();
-    });
-  } else {
-    // No token provided
-    res.sendStatus(401);
-  }
-};
+//       req.user = decoded;
+//       next();
+//     });
+//   } else {
+//     // No token provided
+//     res.sendStatus(401);
+//   }
+// };
 
-router.get('/protected', authenticateJWT, (req, res) => {
-  // Handle protected route
-  res.send('Protected route');
-});
+// router.get('/protected', authenticateJWT, (req, res) => {
+//   // Handle protected route
+//   res.send('Protected route');
+// });
 
 
 
