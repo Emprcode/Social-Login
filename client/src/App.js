@@ -4,12 +4,13 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import { useEffect, useState } from 'react';
 import { fetchToken } from './pages/src/axios';
+import axios from 'axios';
 
  const  App = () =>  {
   
     const [user, setUser] = useState(null);
   
-    useEffect(() => {
+    // useEffect(() => {
       // const getUser = () => {
       //   fetch("http://localhost:5000/auth/login/success", {
       //     method: "GET",
@@ -35,7 +36,23 @@ import { fetchToken } from './pages/src/axios';
       // getUser();
 
       // fetchToken()
-    }, []);
+    // }, []);
+
+    // const [user, setUser] = useState(null);
+
+	const getUser = async () => {
+		try {
+			const url = `http://localhost:5000/auth/login/success`;
+			const { data } = await axios.get(url, { withCredentials: true });
+			setUser(data.user._json);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	useEffect(() => {
+		getUser();
+	}, []);
 
 
 
@@ -45,7 +62,7 @@ import { fetchToken } from './pages/src/axios';
    <BrowserRouter>
    <Routes>
     <Route path='/' element={<Login/>}/>
-    <Route path='/dashboard' element={<Dashboard/>}/>
+    <Route path='/dashboard' element={user ? <Dashboard/> : <Login/>}/>
    </Routes>
    </BrowserRouter>
    

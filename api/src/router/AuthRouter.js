@@ -5,13 +5,18 @@ import { signAccessJwt, signRefreshJwt } from '../jwt.js';
 
 const router = express.Router();
 
-const CLIENT_URL = "http://localhost:3000";
+const CLIENT_URL = "http://localhost:3001";
 
 
 
 router.get("/login/success", (req, res) => {
- 
-  if (req.user) {
+  const user = req.user;
+    const email = user.emails[0].value
+    const tokens = {
+      accessJwt : signAccessJwt({email}),
+      refreshJwt : signRefreshJwt({email})
+    }
+  if (req.user && tokens) {
     res.status(200).json({
       success: true,
       message: "successfull",
@@ -50,23 +55,23 @@ router.get(
   '/google/callback',
   passport.authenticate('google', { session: false  }),
   (req, res) => {
-    // console.log(req.user)
     const user = req.user;
     const email = user.emails[0].value
     const tokens = {
       accessJwt : signAccessJwt({email}),
       refreshJwt : signRefreshJwt({email})
     }
-    // Redirect or respond with the JWT token
-    // res.cookie('token', tokens, { httpOnly: true });
+    // 
     // tokens && user  && res.redirect(CLIENT_URL + '/dashboard')
-    res.json({ 
+  // req.user && tokens && 
+  res.json({ 
       status:"success",
       message:"user registered succcessfully",
       user,
       tokens, 
     
-    });
+    })
+    //  && res.redirect(CLIENT_URL + '/dashboard')
     },
     
     );
