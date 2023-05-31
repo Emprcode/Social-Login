@@ -4,10 +4,9 @@ import { fetchToken } from './src/axios'
 const Login = () => {
 
   
-  useEffect(()=> {
-    fetchToken()
-  }, [])
+ 
     const google = () => {
+      // fetchToken()
         window.open("http://localhost:5000/auth/google", "_self");
         
       };
@@ -19,6 +18,9 @@ const Login = () => {
       const linkedin = () => {
         window.open("http://localhost:5000/auth/linkedin", "_self");
       };
+
+
+      
   return (
 
     

@@ -7,44 +7,16 @@ const router = express.Router();
 
 const CLIENT_URL = "http://localhost:3000";
 
-router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 
-router.get(
-  '/google/callback',
-  passport.authenticate('google', { session: false  }),
-  (req, res) => {
-    console.log(req.user)
-    const user = req.user;
-    const tokens = {
-      accessJwt : signAccessJwt({email: user.email}),
-      refreshJwt : signRefreshJwt({email: user.email})
-    }
-    // Redirect or respond with the JWT token
-    // res.cookie('token', tokens, { httpOnly: true });
-    // tokens && user  && res.redirect(CLIENT_URL + '/dashboard')
-    res.json({ 
-      status:"success",
-      user,
-      tokens });
-  },
-
-);
-
-router.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    successRedirect: CLIENT_URL + '/dashboard',
-    failureRedirect: "/login/failed",
-  })
-);
-router.get('/login/success', (req, res) => {
- console.log(req.user)
+router.get("/login/success", (req, res) => {
+ 
   if (req.user) {
     res.status(200).json({
       success: true,
       message: "successfull",
       user: req.user,
+      tokens
     });
   }
 });
@@ -56,34 +28,56 @@ router.get("/login/failed", (req, res) => {
   });
 });
 
-// router.get("/logout", (req, res) => {
-//   req.logout();
-//   res.redirect(CLIENT_URL);
-// });
-// const authenticateJWT = (req, res, next) => {
-//   const token = req.headers.authorization;
-// console.log(token)
-//   if (token) {
-//     jwt.verify(token, process.env.SECRET, (err, decoded) => {
-//       if (err) {
-//         // Handle invalid token
-//         return res.sendStatus(403);
-//       }
+router.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect(CLIENT_URL);
+});
 
-//       req.user = decoded;
-//       next();
-//     });
-//   } else {
-//     // No token provided
-//     res.sendStatus(401);
-//   }
-// };
+// router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
 
-// router.get('/protected', authenticateJWT, (req, res) => {
-//   // Handle protected route
-//   res.send('Protected route');
-// });
+// router.get(
+//   "/google/callback",
+//   passport.authenticate("google",  {
+//     successRedirect: CLIENT_URL,
+//     failureRedirect: "/login/failed",
+//   })
+// );
 
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+
+
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { session: false  }),
+  (req, res) => {
+    // console.log(req.user)
+    const user = req.user;
+    const email = user.emails[0].value
+    const tokens = {
+      accessJwt : signAccessJwt({email}),
+      refreshJwt : signRefreshJwt({email})
+    }
+    // Redirect or respond with the JWT token
+    // res.cookie('token', tokens, { httpOnly: true });
+    // tokens && user  && res.redirect(CLIENT_URL + '/dashboard')
+    res.json({ 
+      status:"success",
+      message:"user registered succcessfully",
+      user,
+      tokens, 
+    
+    });
+    },
+    
+    );
+
+// router.get(
+//   "/google/callback",
+//   passport.authenticate("google", {
+//     successRedirect: CLIENT_URL + '/dashboard',
+//     failureRedirect: "/login/failed",
+//   })
+// );
 
 
 //github
