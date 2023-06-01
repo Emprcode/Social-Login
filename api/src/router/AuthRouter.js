@@ -2,6 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import mongoose from 'mongoose'
 import { signAccessJwt, signRefreshJwt } from '../jwt.js';
+import { UserAuth } from '../authMiddleware.js';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ const CLIENT_URL = "http://localhost:3000";
 
 
 
-router.get("/login/success", (req, res) => {
+router.get("/login/success", UserAuth, (req, res) => {
  
   if (req.user && tokens) {
     res.status(200).json({
@@ -68,7 +69,7 @@ router.get(
        tokens
     
     })
-  return res.redirect(`/dashboard?token=${tokens.accessJwt}`)
+res.redirect('/dashboard');
   } else{ 
       return res.status(401).json({ error: 'Authentication failed' });
   }
