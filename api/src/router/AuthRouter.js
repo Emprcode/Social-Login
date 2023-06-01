@@ -5,17 +5,12 @@ import { signAccessJwt, signRefreshJwt } from '../jwt.js';
 
 const router = express.Router();
 
-const CLIENT_URL = "http://localhost:3001";
+const CLIENT_URL = "http://localhost:3000";
 
 
 
 router.get("/login/success", (req, res) => {
-  const user = req.user;
-    const email = user.emails[0].value
-    const tokens = {
-      accessJwt : signAccessJwt({email}),
-      refreshJwt : signRefreshJwt({email})
-    }
+ 
   if (req.user && tokens) {
     res.status(200).json({
       success: true,
@@ -26,17 +21,18 @@ router.get("/login/success", (req, res) => {
   }
 });
 
-router.get("/login/failed", (req, res) => {
-  res.status(401).json({
-    success: false,
-    message: "failure",
-  });
-});
 
-router.get("/logout", (req, res) => {
-  req.logout();
-  res.redirect(CLIENT_URL);
-});
+// router.get("/login/failed", (req, res) => {
+//   res.status(401).json({
+//     success: false,
+//     message: "failure",
+//   });
+// });
+
+// router.get("/logout", (req, res) => {
+//   req.logout();
+//   res.redirect(CLIENT_URL);
+// });
 
 // router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
 
@@ -57,21 +53,27 @@ router.get(
   (req, res) => {
     const user = req.user;
     const email = user.emails[0].value
+    
+    // 
+    // tokens && user  && res.redirect(CLIENT_URL + '/dashboard')
+  // req.user && tokens && 
+  if (user) {
     const tokens = {
       accessJwt : signAccessJwt({email}),
       refreshJwt : signRefreshJwt({email})
     }
-    // 
-    // tokens && user  && res.redirect(CLIENT_URL + '/dashboard')
-  // req.user && tokens && 
-  res.json({ 
+    res.json({ 
       status:"success",
       message:"user registered succcessfully",
-      user,
-      tokens, 
+       tokens
     
     })
-    //  && res.redirect(CLIENT_URL + '/dashboard')
+  return res.redirect(`/dashboard?token=${tokens.accessJwt}`)
+  } else{ 
+      return res.status(401).json({ error: 'Authentication failed' });
+  }
+  // res.redirect('/dashboard');
+    //  res.redirect(CLIENT_URL + '/dashboard')
     },
     
     );

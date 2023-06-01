@@ -44,6 +44,7 @@ import axios from 'axios';
 		try {
 			const url = `http://localhost:5000/auth/login/success`;
 			const { data } = await axios.get(url, { withCredentials: true });
+      console.log(data)
 			setUser(data.user._json);
 		} catch (err) {
 			console.log(err);
@@ -51,7 +52,8 @@ import axios from 'axios';
 	};
 
 	useEffect(() => {
-		getUser();
+		// getUser();
+    fetchToken()
 	}, []);
 
 
