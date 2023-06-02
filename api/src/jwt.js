@@ -4,9 +4,9 @@ import { createSession } from './model/session/SessionModel.js';
 export const signAccessJwt = async(payload) => {
   return Jwt.sign(payload, process.env.ACCESS_JWT, {expiresIn: "60min"})
 
-  await createSession({ token });
+  // await createSession({ token });
 
-  return token;
+  // return token;
 }
 export const signRefreshJwt = (payload) => {
   return Jwt.sign(payload, process.env.REFRESH_JWT, {expiresIn:"30d"})

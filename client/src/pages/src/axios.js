@@ -18,7 +18,7 @@ export const fetchToken = async() =>  {
     }
     // Redirect or perform further actions with the token
     // Example: Redirect to the dashboard page
-    window.location.href = '/dashboard';
+   tokens &&( window.location.href = '/dashboard');
   } catch (error) {
     // Handle any errors that occur during the request or response
     console.error(error);
