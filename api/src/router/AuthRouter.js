@@ -15,7 +15,7 @@ router.get("/login/success", (req, res) => {
   if (req.user && tokens) {
     res.status(200).json({
       success: true,
-      // message: "successfull",
+      message: "successfull",
       // user: req.user,
       // tokens
     });
@@ -58,7 +58,7 @@ router.get(
     
    
   // req.user && tokens && 
-  if (user) {
+
     const tokens = {
       accessJwt : await signAccessJwt({email}),
       refreshJwt : await signRefreshJwt({email})
@@ -71,10 +71,29 @@ router.get(
        tokens
     
     })
-    user  && tokens && res.redirect(CLIENT_URL + '/dashboard')
-  } else{ 
-      return res.status(401).json({ error: 'Authentication failed' });
-  }
+    
+
+    },
+    
+    )
+
+router.get(
+  '/google/callback',
+ 
+  (req, res) => {
+   if (user && tokens ) {
+   return  res.redirect("/dashboard") 
+    
+   }
+    
+    
+   
+
+
+   
+
+  
+    
 
     },
     
