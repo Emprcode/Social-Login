@@ -1,75 +1,70 @@
-import './App.css';
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import { useEffect, useState } from 'react';
-import { fetchToken } from './pages/src/axios';
+import React, { useState, useEffect } from 'react';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import { postUser } from './pages/src/axios';
 
- const  App = () =>  {
-  
-    const [user, setUser] = useState(null);
-  
-    // useEffect(() => {
-      // const getUser = () => {
-      //   fetch("http://localhost:5000/auth/login/success", {
-      //     method: "GET",
-      //     credentials: "include",
-      //     headers: {
-      //       Accept: "application/json",
-      //       "Content-Type": "application/json",
-      //       "Access-Control-Allow-Credentials": true,
-      //     },
-      //   })
-      //     .then((response) => {
-      //       if (response.status === 200) return response.json();
-      //       throw new Error("authentication has been failed!");
-      //     })
-      //     .then((resObject) => {
-      //       setUser(resObject.user);
-      //       console.log(resObject.user)
-      //     })
-      //     .catch((err) => {
-      //       console.log(err);
-      //     });
-      // };
-      // getUser();
+function App() {
+    const [ user, setUser ] = useState([]);
+    const [ profile, setProfile ] = useState([]);
 
-      // fetchToken()
-    // }, []);
+    const login = useGoogleLogin({
+        onSuccess: (codeResponse) => setUser(codeResponse),
+        onError: (error) => console.log('Login Failed:', error)
+    });
 
-    // const [user, setUser] = useState(null);
+    useEffect(
+        () => {
+            if (user) {
+                axios
+                    .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+                        headers: {
+                            Authorization: `Bearer ${user.access_token}`,
+                            Accept: 'application/json'
+                        }
+                    })
+                    .then((res) => {
+                        setProfile(res.data);
+                    })
+                    .catch((err) => console.log(err));
+            }
+        },
+        [ user ]
+    );
 
-	const getUser = async () => {
-		try {
-			const url = `http://localhost:5000/auth/login/success`;
-			const { data } = await axios.get(url, { withCredentials: true });
-      console.log(data)
-			setUser(data.user._json);
-		} catch (err) {
-			console.log(err);
-		}
-	};
+    // log out function to log the user out of google and set the profile array to null
+    const logOut = () => {
+        googleLogout();
+        setProfile(null);
+    };
 
-	useEffect(() => {
-		// getUser();
-    fetchToken()
-	}, []);
+    console.log(profile, user
+      )
 
+      const handleOnSubmit =async e=> {
+        e.preventDefault()
 
+        const response = await postUser(profile)
+      }
 
-    console.log(user)
-  return (
-   <>
-   <BrowserRouter>
-   <Routes>
-    <Route path='/' element={<Login/>}/>
-    <Route path='/dashboard' element={<Dashboard/> }/>
-   </Routes>
-   </BrowserRouter>
-   
-   </>
-  );
+    return (
+        <div>
+            <h2>React Google Login</h2>
+            <br />
+            <br />
+            {profile ? (
+                <div>
+                    <img src={profile.picture} alt="user image" />
+                    <h3>User Logged in</h3>
+                    <p>Name: {profile.name}</p>
+                    <p>Email Address: {profile.email}</p>
+                    <br />
+                    <br />
+                    <button onClick={logOut}>Log out</button>
+                </div>
+            ) : (
+                <button onClick={() => login()}>Sign in with Google 🚀 </button>
+            )}
+        </div>
+    );
 }
-
 export default App;

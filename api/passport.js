@@ -41,9 +41,13 @@ passport.use(
     //     return res.status(401).json({ error: 'Authentication failed' });
     // }
       // Return the token to the frontend
-
-      console.log("abc:", profile )
-      return done(null, profile );
+      const email = profile.emails[0].value
+      const token = {
+        accessJwt : await signAccessJwt({email}),
+        refreshJwt :  signRefreshJwt({email})
+      }
+      // console.log("abc:", profile, token )
+      return done(null, {profile, token });
     }
   )
 );

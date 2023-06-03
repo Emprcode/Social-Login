@@ -3,7 +3,32 @@ import {Button, Col, Container, Row} from 'react-bootstrap'
 import { fetchToken } from './src/axios'
 const Login = () => {
 
-  
+  // const handleGoogleSuccess = (response) => {
+  //   // Send the response to the backend for verification
+  //   fetch('/api/auth/google', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(response),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       // Handle the response from the backend
+  //       if (data && data.token) {
+  //         // Store the token and redirect to the dashboard
+  //         localStorage.setItem('token', data.token);
+  //         window.location.href = '/dashboard';
+  //       } else {
+  //         // Handle authentication failure
+  //         console.log('Authentication failed');
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error:', error);
+  //     });
+  // };
+
  
     const google = () => {
       // fetchToken()
@@ -44,35 +69,9 @@ const Login = () => {
       </Row>
     </Container>
 
-    // <div className="App">
-    //  <div className="login">
-    //   <h1 className="loginTitle">Choose a Login Method</h1>
-   
-    //     <div className="left">
-    //       <div className="loginButton google" onClick={google}>
-    //         <img src='' alt="" className="icon" />
-    //         Google
-    //       </div>
-    //       <div className="loginButton facebook" onClick={facebook}>
-    //         <img src='' alt="" className="icon" />
-    //         Facebook
-    //       </div>
-    //       <div className="loginButton github" onClick={github}>
-    //         <img src='' alt="" className="icon" />
-    //         Github
-    //       </div>
-    //     </div>
-    //     <div className="center">
-    //       <div className="line" />
-         
-    //     </div>
-        
-    //   </div>
-
-
-
-    // </div>
+ 
   )
 }
 
 export default Login
+

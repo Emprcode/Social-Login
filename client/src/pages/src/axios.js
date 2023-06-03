@@ -1,29 +1,18 @@
 import axios from 'axios';
 
-const googleCallbackUrl = "http://localhost:5000/auth/login/success"
-// Make an async function to fetch the token
-export const fetchToken = async() =>  {
+
+const postUrl = 'http://localhost:8000/api/v1/user'
+
+export const postUser =async (userObj)=> {
+
   try {
-    // Make the request to the '/google/callback' route
-    const response = await axios.get(googleCallbackUrl);
-    console.log(response)
-    // Extract the token from the response data
-    const { status, message, tokens } = response.data;
-    console.log(tokens)
-    
-    if (tokens) {
-      const {accessJWT, refreshJWT} = tokens
-      sessionStorage.setItem("accessJWT", accessJWT)
-      localStorage.setItem("refreshJWT", refreshJWT)
-    }
-    // Redirect or perform further actions with the token
-    // Example: Redirect to the dashboard page
-   tokens &&( window.location.href = '/dashboard');
+    const {data } = await axios.post(postUrl, userObj)
+    console.log(data)
+    return data
   } catch (error) {
-    // Handle any errors that occur during the request or response
-    console.error(error);
+    return({
+      status:"error"
+    })
   }
+ 
 }
-
-// Call the fetchToken function to initiate the process
-
