@@ -40,12 +40,13 @@ function App() {
     console.log(profile, user
       )
 
-      const handleOnSubmit =async e=> {
-        e.preventDefault()
-
+      const handleOnSubmit = async(e)=> {
+        // e.preventDefault()
         const response = await postUser(profile)
+        console.log(response)
       }
 
+    user && handleOnSubmit()
     return (
         <div>
             <h2>React Google Login</h2>
@@ -53,7 +54,7 @@ function App() {
             <br />
             {profile ? (
                 <div>
-                    <img src={profile.picture} alt="user image" />
+                    <img src={profile.picture} alt="user-image" />
                     <h3>User Logged in</h3>
                     <p>Name: {profile.name}</p>
                     <p>Email Address: {profile.email}</p>
